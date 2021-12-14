@@ -2351,7 +2351,15 @@ class PlaybackManager {
 
             if (type === 'Video' || type === 'Audio') {
                 contentType = getMimeType(type.toLowerCase(), mediaSourceContainer);
-
+                // WingPatch 修改支持.wmeta
+                if (mediaSource.Protocol == 'File' && mediaSource.Path.indexOf('.wmeta.') > 0) {
+                    mediaSource.Protocol = 'Http';
+                    mediaSource.enableDirectPlay = true;
+                    let url = window.localStorage.getItem('WING_META_API');
+                    if (url == null) url = `http://${window.location.hostname}:19012/api/wgw/netfile/get`;
+                    url += '?file=' + encodeURIComponent(mediaSource.Path);
+                    mediaSource.Path = url;
+                }
                 if (mediaSource.enableDirectPlay) {
                     mediaUrl = mediaSource.Path;
 
