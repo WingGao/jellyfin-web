@@ -7,6 +7,7 @@ import itemHelper from './itemHelper';
 import { playbackManager } from './playback/playbackmanager';
 import ServerConnections from './ServerConnections';
 import toast from './toast/toast';
+import { IsWingResource, WingResourceUrl } from '../wing';
 
 /* eslint-disable indent */
     export function getCommands(options) {
@@ -365,7 +366,14 @@ import toast from './toast/toast';
                     });
                     break;
                 case 'copy-stream': {
-                    const downloadHref = apiClient.getItemDownloadUrl(itemId);
+                    // WingPatch 修改支持.wmeta
+                    let downloadHref ;
+                    if (IsWingResource(item.Path)) {
+                        downloadHref = WingResourceUrl(item.Path);
+                    } else {
+                        downloadHref = apiClient.getItemDownloadUrl(itemId);
+                    }
+
                     const textAreaCopy = function () {
                         const textArea = document.createElement('textarea');
                         textArea.value = downloadHref;

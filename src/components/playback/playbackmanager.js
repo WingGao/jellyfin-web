@@ -11,6 +11,7 @@ import { appHost } from '../apphost';
 import Screenfull from 'screenfull';
 import ServerConnections from '../ServerConnections';
 import alert from '../alert';
+import { IsWingResource, WingResourceUrl } from '../../wing';
 
 function enableLocalPlaylistManagement(player) {
     if (player.getPlaylist) {
@@ -2468,7 +2469,12 @@ class PlaybackManager {
 
             if (type === 'Video' || type === 'Audio') {
                 contentType = getMimeType(type.toLowerCase(), mediaSourceContainer);
-
+                // WingPatch 修改支持.wmeta
+                if (mediaSource.Protocol == 'File' && IsWingResource(mediaSource.Path)) {
+                    mediaSource.Protocol = 'Http';
+                    mediaSource.enableDirectPlay = true;
+                    mediaSource.Path = WingResourceUrl(mediaSource.Path);
+                }
                 if (mediaSource.enableDirectPlay) {
                     mediaUrl = mediaSource.Path;
 
