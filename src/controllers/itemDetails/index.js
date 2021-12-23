@@ -1434,6 +1434,11 @@ function renderChildren(page, item) {
             });
             isList = true;
         } else if (item.Type == 'Series') {
+            if(result.Items.length == 1){
+                // 只有1集的，展开
+                renderChildren(page,result.Items[0])
+                return
+            }
             scrollX = enableScrollX();
             html = cardBuilder.getCardsHtml({
                 items: result.Items,
